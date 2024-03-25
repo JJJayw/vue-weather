@@ -9,5 +9,3 @@
 <script setup lang="ts" name='App'>
 import SiteNavigation from "@/components/SiteNavigation.vue";
 </script>
-
-<style scoped></style>
