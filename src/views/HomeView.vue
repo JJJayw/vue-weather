@@ -42,7 +42,7 @@ function getSearchResults(): void {
 	clearTimeout(queryTimeout.value);
 	queryTimeout.value = setTimeout(async () => {
 		if (searchQuery.value !== "") {
-			searchResult(searchQuery).then((response) => {
+			await searchResult(searchQuery).then((response) => {
 				mapSearchResults.value = response.data.districts;
 			}).catch(() => {
 				searchError.value = true
