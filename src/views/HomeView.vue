@@ -25,42 +25,28 @@
 
 <script setup lang="ts" name="HomeView">
 import {ref} from "vue";
-import axios from "axios";
-import * as data from "@/resource/api.json";
+import {searchResult} from "@/api";
 
-// API密钥
-const APIKey = data.apiKey;
+
 // 查询关键字
 const searchQuery = ref("");
 // 懒搜索 时间
 const queryTimeout = ref();
 // 查询结果集
 const mapSearchResults: any = ref();
-
+// 查询失败判断
 const searchError = ref();
 
-const getSearchResults = () => {
+// 查询方法
+function getSearchResults(): void {
 	clearTimeout(queryTimeout.value);
 	queryTimeout.value = setTimeout(async () => {
 		if (searchQuery.value !== "") {
-			try {
-				const result: any = await axios.get(
-					// API URL
-					"https://restapi.amap.com/v3/config/district",
-					{
-						params: {
-							keywords: searchQuery.value,
-							subdistrict: 0,
-							key: APIKey,
-							extensions: "base",
-							offset: 10
-						}
-					}
-				);
-				mapSearchResults.value = result.data.districts;
-			} catch {
+			searchResult(searchQuery).then((response) => {
+				mapSearchResults.value = response.data.districts;
+			}).catch(() => {
 				searchError.value = true
-			}
+			})
 			return
 		}
 		mapSearchResults.value = null;
