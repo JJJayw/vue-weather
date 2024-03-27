@@ -6,19 +6,23 @@
 			       @input="getSearchResults"
 			       placeholder="搜索城市"
 			       class="py-2 px-1 w-full bg-transparent border-b focus:border-weather-secondary focus:outline-none focus:shadow-[0px_1px_0_0_#004E71]">
-
-			<ul class="absolute bg-weather-secondary text-white w-full shadow-md py-2 px-1 top-[66px]"
-			    v-if="mapSearchResults">
-				<li v-if="searchError" class="py-2 list-none">抱歉，</li>
-				<li v-if="!searchError && mapSearchResults.length === 0" class="py-2 list-none">
+			
+			<ul v-if="mapSearchResults"
+			    class="absolute bg-weather-secondary text-white w-full shadow-md py-2 px-1 top-[66px]">
+				<p v-if="searchError" class="py-2">
+					抱歉，
+				</p>
+				<p v-if="!searchError && mapSearchResults.length === 0" class="py-2">
 					没有您查询的结果，请重新输入
-				</li>
-				<li v-for="searchResult in  mapSearchResults" :key="searchResult.adcode"
-				    class="py-2 cursor-pointer">
+				</p>
+				<li v-for="searchResult in  mapSearchResults"
+				    :key="searchResult.adcode"
+				    class="py-2 cursor-pointer"
+				    @click="previewCity(searchResult)">
 					{{ searchResult.name }}
 				</li>
 			</ul>
-
+		
 		</div>
 	</main>
 </template>
@@ -26,7 +30,9 @@
 <script setup lang="ts" name="HomeView">
 import {ref} from "vue";
 import {searchResult} from "@/api";
+import {useRouter} from "vue-router";
 
+const router = useRouter();
 
 // 查询关键字
 const searchQuery = ref("");
@@ -45,12 +51,25 @@ function getSearchResults(): void {
 			await searchResult(searchQuery).then((response) => {
 				mapSearchResults.value = response.data.districts;
 			}).catch(() => {
-				searchError.value = true
+				searchError.value = true;
 			})
 			return
 		}
 		mapSearchResults.value = null;
 	}, 300)
+}
+
+// 路由
+function previewCity(searchResult: any) {
+	router.push({
+		name: "cityView",
+		params: {
+			city: searchResult.name,
+		},
+		query: {
+			location: searchResult.center,
+		}
+	})
 }
 </script>
 

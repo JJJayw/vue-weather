@@ -1,19 +1,27 @@
-import { fileURLToPath, URL } from 'node:url'
+import {fileURLToPath, URL} from 'node:url'
 
-import { defineConfig } from 'vite'
+import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-import VueSetupExtend from "vite-plugin-vue-setup-extend";
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    vue(),
-    VueSetupExtend(),
-  ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+        plugins: [
+            vue(),
+        ],
+        resolve: {
+            alias: {
+                '@': fileURLToPath(new URL('./src', import.meta.url))
+            }
+        },
+        server: {
+            hmr: true,     //启动热更新，就是更改了代码自动刷新页面
+            proxy: {
+                '/weatherapi': {
+                    target: 'https://api.caiyunapp.com/v2.6',
+                    changeOrigin: true,
+                    rewrite: path => path.replace(/^\/weatherapi/, '')
+                }
+            }
+        }
     }
-  }
-})
+)
