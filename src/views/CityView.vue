@@ -1,9 +1,9 @@
 <template>
 	<div>
 		<Suspense>
-			<AsyncCityView/>
+			<AsyncCityView />
 			<template #fallback>
-				<p>加载中...</p>
+				<CityViewSkeleton />
 			</template>
 		</Suspense>
 	</div>
@@ -11,8 +11,9 @@
 
 <script setup lang="ts">
 import AsyncCityView from "@/components/AsyncCityView.vue";
+import CityViewSkeleton from "@/components/skeleton/CityViewSkeleton.vue";
+
+
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

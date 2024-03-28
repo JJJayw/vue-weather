@@ -5,7 +5,7 @@ export enum weather {
     PARTLY_CLOUDY_NIGHT = "PARTLY_CLOUDY_NIGHT",//多云（夜间）
     CLOUDY = "CLOUDY", // 阴
     LIGHT_HAZE = "LIGHT_HAZE", //轻度雾霾
-    MODERATE_HAZE = "MODERATE_HAZE ", //中度雾霾
+    MODERATE_HAZE = "MODERATE_HAZE", //中度雾霾
     HEAVY_HAZE = "HEAVY_HAZE", //重度雾霾
     LIGHT_RAIN = "LIGHT_RAIN", //小雨
     MODERATE_RAIN = "MODERATE_RAIN", //中雨

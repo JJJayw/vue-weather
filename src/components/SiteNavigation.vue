@@ -9,8 +9,9 @@
 			</RouterLink>
 			<div class="flex gap-3 flex-1 justify-end">
 				<i class="fa-solid fa-circle-info text-xl hover:text-weather-secondary duration-150 cursor-pointer"
-				   @click="toggleModal"></i>
-				<i class="fa-solid fa-plus text-xl hover:text-weather-secondary duration-150 cursor-pointer"></i>
+					@click="toggleModal"></i>
+				<i class="fa-solid fa-plus text-xl hover:text-weather-secondary duration-150 cursor-pointer"
+					@click="addCity"></i>
 			</div>
 
 			<BaseModal :modalActive="modalActive" @close-modal="toggleModal">
@@ -39,18 +40,40 @@
 				</div>
 			</BaseModal>
 		</nav>
-
 	</header>
 </template>
 
 <script setup lang="ts">
-import {RouterLink} from "vue-router";
+import { RouterLink, useRoute, useRouter } from "vue-router";
 import BaseModal from "@/components/BaseModal.vue";
-import {ref} from "vue";
+import { v4 as uuidv4 } from 'uuid';
+import { ref } from "vue";
 
+const routes = useRoute();
+const router = useRouter();
 
+const savedCities: any = ref([]);
 const modalActive = ref(false);
-const toggleModal = () => {
+
+// TODO 增加城市
+function addCity() {
+	if (localStorage.getItem("savedCities")) {
+		savedCities.value = JSON.parse(localStorage.getItem("savedCities") as string);
+	}
+	// FIXME添加功能 在主页禁止按加号
+	// 防止添加空值
+	if (routes.params.city !== undefined) {
+		const locationObj = {
+			id: uuidv4(),
+			city: routes.params.city,
+			location: routes.query.location as string,
+		};
+		savedCities.value.push(locationObj);
+		localStorage.setItem('savedCities', JSON.stringify(savedCities.value));
+	}
+};
+
+function toggleModal() {
 	modalActive.value = !modalActive.value;
 }
 </script>

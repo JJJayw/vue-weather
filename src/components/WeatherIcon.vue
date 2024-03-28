@@ -17,9 +17,11 @@
     <div v-else-if="skycon === weather.LIGHT_HAZE">
         <LightHaze />
     </div>
+
     <div v-else-if="skycon === weather.MODERATE_HAZE">
         <ModerateHaze />
     </div>
+
     <div v-else-if="skycon === weather.HEAVY_HAZE">
         <HeavyHaze />
     </div>
@@ -70,7 +72,7 @@ import PartlyCludyDay from '@/components/weather/PartlyCloudyDay.vue';
 import PartlyCloudyNight from '@/components/weather/PartlyCloudyNight.vue';
 import Cloudy from '@/components/weather/Cloudy.vue'
 import LightHaze from '@/components/weather/LightHaze.vue';
-import ModerateHaze from '@/components/weather/ModerateHaze.vue';
+import ModerateHaze from "@/components/weather/ModerateHaze.vue";
 import HeavyHaze from '@/components/weather/HeavyHaze.vue';
 import LightRain from '@/components/weather/LightRain.vue';
 import ModerateRain from '@/components/weather/ModerateRain.vue';
@@ -84,8 +86,6 @@ import StormSnow from '@/components/weather/StormSnow.vue';
 import Dust from '@/components/weather/Dust.vue';
 import Sand from '@/components/weather/Sand.vue';
 import Wind from '@/components/weather/Wind.vue';
-
-
 
 defineProps<{ skycon: string }>()
 

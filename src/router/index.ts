@@ -4,18 +4,20 @@ const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
-            path: "/",
-            component: () => import("@/views/HomeView.vue")
-        },
-        {
             name: "home",
-            path: "/home",
-            component: () => import("@/views/HomeView.vue")
+            path: "/",
+            component: () => import("@/views/HomeView.vue"),
+            meta: {
+                title: "首页",
+            }
         },
         {
             name: 'cityView',
             path: "/weather/:city",
-            component: () => import("@/views/CityView.vue")
+            component: () => import("@/views/CityView.vue"),
+            meta: {
+                title: "天气",
+            }
         },
         {
             name: 'testView',
@@ -25,4 +27,10 @@ const router = createRouter({
     ]
 })
 
+router.beforeEach((to, form, next) => {
+
+    // 修改标题
+    document.title = `${to.params.city ? to.params.city : to.meta.title} | 当地天气`;
+    next();
+})
 export default router

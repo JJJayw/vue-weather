@@ -12,7 +12,7 @@
 				{{ new Date().toLocaleDateString("zh-cn", { weekday: "short", day: "2-digit", month: "long", }) }}
 				{{ new Date().toLocaleTimeString("zh-cn", { timeStyle: "short" }) }}
 			</p>
-			温度
+
 			<p class="text-8xl mb-8">
 				{{ Math.round(hourlyData.temperature[0].value) }}&deg
 			</p>
@@ -30,9 +30,10 @@
 		<!--		24小时预报-->
 		<div class="max-w-screen-md w-full py-12">
 			<div class="mx-8 text-white">
-				<h2 class="mb-4">小时天气</h2>
-				<!--				滚动条<div class="flex gap-10 overflow-x-scroll">-->
-				<div class="flex gap-10">
+				<h2 class="mb-4 text-xl">未来8小时</h2>
+				<!-- TODO滚动条 -->
+				<!-- <div class="flex gap-10 overflow-x-scroll scroll-smooth"> -->
+				<div class="flex gap-12">
 					<div v-for="hourData in hourlyList" :key="hourData.date" class="flex flex-col gap-4 items-center">
 						<p class="whitespace-nowrap text-md">
 							{{ new Date(hourData.date).toLocaleTimeString("en-us", { hour: "numeric" }) }}
@@ -41,6 +42,7 @@
 						<p class="text-xl">
 							{{ Math.round(hourData.value) }}&deg;
 						</p>
+						<!-- </div> -->
 					</div>
 				</div>
 			</div>
@@ -50,7 +52,7 @@
 
 		<div class="max-w-screen-md w-full py-12">
 			<div class="mx-8 text-white">
-				<h2 class="mb-4">周预报</h2>
+				<h2 class="mb-4 text-2xl">未来一周</h2>
 				<div v-for="day in dailyList" :key="day.date" class="flex items-center">
 					<p class="flex-1">
 						{{ new Date(day.date).toLocaleDateString("zh-cn", { weekday: "long" }) }}
@@ -63,17 +65,25 @@
 				</div>
 			</div>
 		</div>
+		<!-- TODO 删除功能 -->
+		<!-- 删除城市 -->
+		<div class="flex items-center gap-2 py-12 text-white cursor-pointer duration-150 hover:text-red-500"
+			@click="removeCity">
+			<i class="fa-solid fa-trash"></i>
+			<p>删除城市</p>
+		</div>
 	</div>
 </template>
 
 
 <script setup lang="ts">
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { hourlyWeather, dailyWeather } from "@/api";
 import { computed, ref } from "vue";
 import WeatherIcon from '@/components/WeatherIcon.vue'
 
 const routes = useRoute()
+const router = useRouter();
 
 const hourlyList = ref();
 const dailyList = ref();
@@ -84,7 +94,7 @@ const location = computed(() => {
 
 const getHourlyWeatherData = async () => {
 	try {
-		const response = await hourlyWeather(location.value);
+		const response = await hourlyWeather(location.value, 8);
 		return response.data.result.hourly;
 	} catch (err) {
 		console.log(err);
@@ -94,7 +104,7 @@ const getHourlyWeatherData = async () => {
 // 获取周数据  
 const getDailyWeatherData = async () => {
 	try {
-		const response = await dailyWeather(location.value);
+		const response = await dailyWeather(location.value, 7);
 		return response.data.result.daily;
 	} catch (err) {
 		console.log(err);
@@ -118,7 +128,6 @@ const [hourlyData, dailyData] = await Promise.all([
 		}
 		list.push(obj)
 	}
-
 	hourlyList.value = list;
 })();
 
@@ -133,8 +142,17 @@ const [hourlyData, dailyData] = await Promise.all([
 		}
 		list.push(obj)
 	}
-	console.log(list);
 	dailyList.value = list;
 })();
 
+
+function removeCity() {
+	const cities = JSON.parse(localStorage.getItem("savedCities") as string);
+
+	// 更新数组
+	const updatedCities = cities.filter((city: any) => routes.params.city !== city.city)
+
+	localStorage.setItem("savedCities", JSON.stringify(updatedCities));
+	router.push({ name: "home" });
+}
 </script>
